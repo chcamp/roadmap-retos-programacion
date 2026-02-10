@@ -6,8 +6,13 @@ name: Stats
 #3.- Intentar porgramar un schedule o un cron que es un proceso recurrente.
 #Para este ejemplo tomamos el primero que se ejecute el action al hacer un push solo en la rama main
 on:
-  push:
-    branches: [main]
+  #Schedule es un cron un temporizador automatico que cada cierto tiempo se ejecuta el action
+  schedule:
+    #- cron: '20 1 10 2 *'
+    - cron: '*/5 * * * *'
+  #esto de push es el manual cuando se hace ppush fue el primer ejemplo.
+  #push:
+    #branches: [main]
 
 #La tercera parte seria los jobs, los jobs son un conjunto de pasos que se tienen que ejecutar en esta actions
 jobs:
