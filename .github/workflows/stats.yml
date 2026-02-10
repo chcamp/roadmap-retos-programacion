@@ -1,0 +1,64 @@
+#Nombre del action
+name: Stats
+#on --> en que momento quiero que se ejecute o lance el actions, tenemos 3 opciones:
+#1.- se lance el action cada vez que se hace un push en una rama.
+#2.- cada vez que se solicite una pull request, que se lance el actions
+#3.- Intentar porgramar un schedule o un cron que es un proceso recurrente.
+#Para este ejemplo tomamos el primero que se ejecute el action al hacer un push solo en la rama main
+on:
+  push:
+    branches: [main]
+
+#La tercera parte seria los jobs, los jobs son un conjunto de pasos que se tienen que ejecutar en esta actions
+jobs:
+  #El build significa que vamos aqui acabar indicando cual es todo el proceso de construccion
+  #puedes hacer o construir una build, un deploy.
+  build:
+    #aca indicamos en que tipo de maquina de github va a correr esto
+    runs-on: ubuntu-latest
+    permissions:
+      # Give the default GITHUB_TOKEN write permission to commit and push the
+      # added or changed files to the repository.
+      contents: write
+    #lo siguiente seria los steps o pasos son las tareas puede ser en paralelo o serie que hara
+    #un job puede tener uno o varios steps y dentro varias tareas o tasks. aqui tenemos que lanzar
+    #cada una de las actions que van a ser capaces de ejecutar nuestro codigo.
+    steps:
+      #podemos configurarle a cada step un name para que en consola se vea el paso o step que se esta ejecutando
+      - name: Checkout repo
+      #que vamos a poder usar para obtener el codigo de nuestro repositorio?
+      #actions/checkout@v6 --> con eso se trae todo el codigo del repositorio lo sube al actions
+        uses: actions/checkout@v6
+      #Ok , ya tengo todo el codigo subido que es lo sgte en hacer? en este flujo de trabajo configurar python
+      #para que este codigo lo deploye en la maquina de python
+      #como en checkoutb de arriba buscamos si hay deploy en python en :
+      # https://github.com/actions
+      #y aca lo tenemos es: actions/setup-python@v6
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      #ok ya tenemos la maquina python en engine para que haga el build de nuestro proyecto que esta en github
+      #Ahora tenemos que correr este script de python para que ejecute el deploy o la construccion 
+      #llamo al comando python + la ruta donde esta ese stats.py que quiero ejecutar para buildear
+      - name: Run Script
+        run: python ./Roadmap/stats.py        
+      #pero la finalidad de este actions es que tiene que generar un json con los datos como un reporte algo que se llama
+      #stats.json, y donde lo vamos a guardar? lo va a aguardar en este sandbox en esta maquina EN ESTA ACTIONS. POR ESO ARRIBA
+      #HACEMOS UN CHECKOUT DE LA MAQUINA PARA EN ESA RAMA TRABAJARLA COMO UNA BURBUJA DE ESE REPO DE SU CONTENIDO.
+      #Y LE DECIMOS EN ESTA BURBUJA QUE NO TIENE NADA (LA BURBUJA ES EL UBUNTO O LA MAQUNA VIRTUAL), LE DECIMOS:
+      #1.- SUBETE EL CODIGO DEL REPO, 2 -> INSTALATE, PYTHON 3 LA VERSION 3.11 Y EJECUTA EL CODIGO
+
+      #COMO LO HARIAMOS EN UNA PC LOCAL O PALTOP
+      #RSTO ACABARA DESENCADENANDO EN UN FICHERO DE LA CARPETA RADMAP QUE SE LLAMA stats.py
+      #pero que tendriamos que acabar con ese fichero que se genera tendria que acabar devolviendolo a nuestro repositorio.
+      #tendriamso que hacer un commirt y un push desde este action que es como una MV al repo real para que aparezca en nuestro repo real
+      #como hacemos un commit y un push? desde la actions a nuestro repo real? creamos otra actions:?? buscamos en la lista de actions
+      #a ver si alguien ya hizo ese action o tarea..buscamos ahi.. https://github.com/marketplace?type=actions
+      - name: Commit and Push changes
+        uses: stefanzweifel/git-auto-commit-action@v7
+        with:
+          commit_message: Mensaje Comiteado!
+          commit_user_name: Rolando Campos # defaults to "github-actions[bot]"
+          commit_user_email: cca40060138@gmail.com
+          commit_author: chcamp
