@@ -7,12 +7,12 @@ name: Stats
 #Para este ejemplo tomamos el primero que se ejecute el action al hacer un push solo en la rama main
 on:
   #Schedule es un cron un temporizador automatico que cada cierto tiempo se ejecuta el action
-  schedule:
+  #schedule:
     #- cron: '20 1 10 2 *'
-    - cron: '*/5 * * * *'
+    #- cron: '*/5 * * * *'
   #esto de push es el manual cuando se hace ppush fue el primer ejemplo.
-  #push:
-    #branches: [main]
+  push:
+    branches: [main]
     
 #La tercera parte seria los jobs, los jobs son un conjunto de pasos que se tienen que ejecutar en esta actions
 jobs:
