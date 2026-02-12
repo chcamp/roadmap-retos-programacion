@@ -1,8 +1,10 @@
 name: Stats_antiguo
 
 on:
-  schedule:
-    - cron: '0 0 * * *'
+  #schedule:
+   # - cron: '0 0 * * *'
+   push:
+    branches: [main]
 
 jobs:
   build:
